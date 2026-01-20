@@ -1,0 +1,30 @@
+from enum import Enum
+
+
+class RiskLevel(str, Enum):
+    LOW = "LOW"
+    MEDIUM = "MEDIUM"
+    HIGH = "HIGH"
+
+
+class ContractStatus(str, Enum):
+    UPLOADED = "UPLOADED"
+    ANALYZED = "ANALYZED"
+    UNDER_REVIEW = "UNDER_REVIEW"
+    FINALIZED = "FINALIZED"
+
+
+class ClauseType(str, Enum):
+    PAYMENT = "PAYMENT"
+    TERMINATION = "TERMINATION"
+    NDA = "NDA"
+    LIABILITY = "LIABILITY"
+    GOVERNING_LAW = "GOVERNING_LAW"
+    OTHER = "OTHER"
+
+
+class AuditAction(str, Enum):
+    CONTRACT_UPLOADED = "CONTRACT_UPLOADED"
+    AI_ANALYSIS_COMPLETED = "AI_ANALYSIS_COMPLETED"
+    REVIEW_ACCEPTED = "REVIEW_ACCEPTED"
+    REVIEW_OVERRIDDEN = "REVIEW_OVERRIDDEN"

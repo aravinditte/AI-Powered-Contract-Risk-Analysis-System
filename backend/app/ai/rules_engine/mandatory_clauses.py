@@ -1,0 +1,5 @@
+MANDATORY_CLAUSES = {
+    "PAYMENT",
+    "TERMINATION",
+    "GOVERNING_LAW",
+}
