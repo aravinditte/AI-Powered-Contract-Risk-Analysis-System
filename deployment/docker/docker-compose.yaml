@@ -3,6 +3,7 @@ version: "3.9"
 services:
   postgres:
     image: postgres:15
+    container_name: contract-postgres
     environment:
       POSTGRES_DB: contracts
       POSTGRES_USER: contracts_user
@@ -14,19 +15,22 @@ services:
 
   backend:
     build:
-      context: .
+      context: ..
       dockerfile: deployment/docker/backend.Dockerfile
-    env_file:
-      - .env.example
+    container_name: contract-backend
     depends_on:
       - postgres
+    environment:
+      DATABASE_URL: postgresql://contracts_user:contracts_pass@postgres:5432/contracts
+      SECRET_KEY: supersecretkey
     ports:
       - "8000:8000"
 
   frontend:
     build:
-      context: .
+      context: ..
       dockerfile: deployment/docker/frontend.Dockerfile
+    container_name: contract-frontend
     depends_on:
       - backend
     ports:

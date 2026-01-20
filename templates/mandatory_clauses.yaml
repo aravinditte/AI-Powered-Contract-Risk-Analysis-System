@@ -1,0 +1,5 @@
+mandatory_clauses:
+  - PAYMENT
+  - TERMINATION
+  - GOVERNING_LAW
+  - LIABILITY
