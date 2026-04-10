@@ -1,0 +1,58 @@
+# ── Version control ──────────────────────────────
+.git
+.gitignore
+
+# ── Python artifacts ─────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Virtual environments ─────────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── Test & coverage ───────────────────────────────
+.pytest_cache/
+htmlcov/
+.coverage
+*.cover
+
+# ── Secrets & local config ────────────────────────
+.env
+*.env.local
+*.env.production
+
+# ── IDE / editor ─────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Frontend build output (rebuilt inside container) ──
+frontend/node_modules/
+frontend/dist/
+
+# ── Data (uploaded files / SQLite DB are stored in a named volume) ──
+data/uploads/
+data/contracts.db
+
+# ── Docs (not needed at runtime) ─────────────────
+docs/
+*.md
+
+# ── Kubernetes manifests ──────────────────────────
+deployment/kubernetes/
+
+# ── Logs ─────────────────────────────────────────
+*.log
+logs/

@@ -1,36 +1,54 @@
 version: "3.9"
 
+# ============================================================
+# Enterprise Backend (PostgreSQL variant)
+# Uses backend/ directory with PostgreSQL instead of SQLite.
+# Run from the repo root:  docker compose -f deployment/docker/docker-compose.yaml up --build
+# ============================================================
+
 services:
+
   postgres:
-    image: postgres:15
+    image: postgres:15-alpine
     container_name: contract-postgres
+    restart: unless-stopped
     environment:
       POSTGRES_DB: contracts
       POSTGRES_USER: contracts_user
       POSTGRES_PASSWORD: contracts_pass
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U contracts_user -d contracts"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
-      context: ..
+      context: ../..
       dockerfile: deployment/docker/backend.Dockerfile
-    container_name: contract-backend
+    container_name: contract-backend-enterprise
+    restart: unless-stopped
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://contracts_user:contracts_pass@postgres:5432/contracts
-      SECRET_KEY: supersecretkey
+      SECRET_KEY: change_this_in_production
+      ENVIRONMENT: production
+      ENABLE_DOCS: "true"
+      AI_DECISION_MODE: HUMAN_REVIEW_ONLY
+      ALLOW_AUTO_APPROVAL: "false"
     ports:
       - "8000:8000"
 
   frontend:
     build:
-      context: ..
+      context: ../..
       dockerfile: deployment/docker/frontend.Dockerfile
     container_name: contract-frontend
+    restart: unless-stopped
     depends_on:
       - backend
     ports:

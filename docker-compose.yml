@@ -1,36 +1,59 @@
 version: "3.9"
 
-services:
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: contracts
-      POSTGRES_USER: contracts_user
-      POSTGRES_PASSWORD: contracts_pass
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+# ============================================================
+# AI Contract Risk Analysis System — Docker Compose
+#
+# Services:
+#   backend   — FastAPI + SQLite + local AI models (port 8000)
+#   frontend  — React/Vite SPA served via nginx (port 3000)
+#
+# Usage:
+#   docker compose up --build          # start everything
+#   docker compose up -d               # detached mode
+#   docker compose logs -f backend     # stream backend logs
+# ============================================================
 
+services:
+
+  # ── Backend ─────────────────────────────────────────────
   backend:
     build:
       context: .
-      dockerfile: deployment/docker/backend.Dockerfile
+      dockerfile: Dockerfile
+    container_name: contract-backend
+    restart: unless-stopped
     env_file:
-      - .env.example
-    depends_on:
-      - postgres
+      - .env                          # copy .env.example → .env and fill in values
+    environment:
+      # Override DATABASE_URL to SQLite inside the container
+      # (the main app uses SQLite by default — no extra DB service needed)
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      # Persist uploaded contracts and the SQLite database across restarts
+      - contract_data:/app/data
     ports:
       - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
+  # ── Frontend ─────────────────────────────────────────────
   frontend:
     build:
       context: .
       dockerfile: deployment/docker/frontend.Dockerfile
+    container_name: contract-frontend
+    restart: unless-stopped
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     ports:
       - "3000:80"
 
 volumes:
-  postgres_data:
+  contract_data:
+    driver: local
