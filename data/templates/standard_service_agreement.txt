@@ -1,0 +1,150 @@
+STANDARD SERVICE AGREEMENT
+
+This Service Agreement ("Agreement") is entered into as of [Date] ("Effective Date") by and between:
+
+[Company Name] ("Company"), a corporation organized under the laws of [State/Country], with its principal office at [Address],
+
+and
+
+[Service Provider Name] ("Provider"), [an individual/a corporation] with its principal address at [Address].
+
+1. DEFINITIONS
+
+"Confidential Information" means any non-public information disclosed by either party to the other, whether orally, in writing, or by inspection of tangible objects, that is designated as confidential or that reasonably should be understood to be confidential given the nature of the information and circumstances of disclosure.
+
+"Deliverables" means the work product, reports, documents, and other materials to be provided by Provider as specified in the Statement of Work.
+
+"Intellectual Property" means all patents, copyrights, trademarks, trade secrets, and other proprietary rights.
+
+"Services" means the professional services to be performed by Provider as described in the Statement of Work.
+
+2. SCOPE OF WORK AND DELIVERABLES
+
+Provider shall perform the Services and deliver the Deliverables as described in the Statement of Work attached hereto as Exhibit A. Working hours shall be as mutually agreed upon by the parties, not to exceed 40 hours per week unless otherwise agreed in writing.
+
+Provider shall use commercially reasonable efforts to complete the Services within the timeline specified in the Statement of Work.
+
+3. PAYMENT TERMS
+
+Company shall pay Provider a fee of [Amount] [Currency] for the Services, payable as follows:
+- [Payment Schedule]
+- Invoices shall be submitted monthly and are due within 30 days of receipt.
+- Late payments shall accrue interest at a rate of 1.5% per month.
+- All payments shall be made in [Currency] via [Payment Method].
+
+4. TERM AND TERMINATION
+
+This Agreement shall commence on the Effective Date and continue for a period of [Duration] unless earlier terminated.
+
+Either party may terminate this Agreement:
+(a) For convenience upon 30 days' written notice to the other party;
+(b) Immediately upon written notice if the other party materially breaches this Agreement and fails to cure such breach within 15 days of written notice;
+(c) Immediately upon written notice if the other party becomes insolvent or files for bankruptcy.
+
+Upon termination, Provider shall deliver all completed Deliverables and Company shall pay for all Services rendered through the termination date.
+
+5. CONFIDENTIALITY
+
+Each party agrees to hold the other party's Confidential Information in strict confidence and not to disclose such information to any third party without the prior written consent of the disclosing party.
+
+The obligations of confidentiality shall survive termination of this Agreement for a period of 3 years.
+
+Confidential Information does not include information that: (a) is or becomes publicly available through no fault of the receiving party; (b) was known to the receiving party prior to disclosure; (c) is independently developed by the receiving party; or (d) is rightfully received from a third party.
+
+6. INTELLECTUAL PROPERTY OWNERSHIP
+
+All Intellectual Property created by Provider in the performance of the Services shall be owned by Company. Provider hereby assigns to Company all right, title, and interest in and to such Intellectual Property.
+
+Provider retains ownership of any pre-existing Intellectual Property and grants Company a non-exclusive, perpetual license to use such pre-existing IP as incorporated into the Deliverables.
+
+7. LIABILITY AND INDEMNIFICATION
+
+Each party's total aggregate liability under this Agreement shall not exceed the total fees paid or payable under this Agreement during the 12-month period preceding the claim.
+
+Neither party shall be liable for any indirect, incidental, special, consequential, or punitive damages.
+
+Provider shall indemnify and hold harmless Company from any third-party claims arising from Provider's negligence or willful misconduct.
+
+Company shall indemnify and hold harmless Provider from any third-party claims arising from Company's use of the Deliverables in violation of applicable law.
+
+8. FORCE MAJEURE
+
+Neither party shall be liable for any failure or delay in performance due to circumstances beyond its reasonable control, including but not limited to acts of God, natural disasters, pandemic, war, terrorism, government actions, or failure of telecommunications or power supply.
+
+The affected party shall promptly notify the other party and use reasonable efforts to mitigate the effects of the force majeure event. If the event continues for more than 90 days, either party may terminate this Agreement.
+
+9. DISPUTE RESOLUTION
+
+Any dispute arising out of or relating to this Agreement shall first be submitted to mediation in [City, State/Country]. If mediation fails, the dispute shall be resolved by binding arbitration under the rules of [Arbitration Body].
+
+The prevailing party shall be entitled to recover reasonable attorneys' fees and costs.
+
+10. DATA PROTECTION AND PRIVACY
+
+Each party shall comply with all applicable data protection laws and regulations, including but not limited to GDPR, CCPA, and other relevant privacy legislation.
+
+Provider shall implement appropriate technical and organizational measures to protect personal data processed in connection with the Services. Provider shall promptly notify Company of any data breach affecting personal data within 72 hours of becoming aware of such breach.
+
+11. NON-COMPETE AND NON-SOLICITATION
+
+During the term of this Agreement and for a period of 12 months thereafter, Provider agrees not to directly compete with Company's core business in [Geographic Area].
+
+During the term and for 12 months thereafter, neither party shall solicit or hire any employee of the other party who was involved in the performance of this Agreement.
+
+12. TAX OBLIGATIONS
+
+Provider is responsible for all taxes arising from compensation received under this Agreement. Company shall withhold taxes as required by applicable law.
+
+Each party shall provide the other with any tax documentation reasonably required for compliance with tax obligations.
+
+13. INSURANCE
+
+Provider shall maintain professional liability insurance with a minimum coverage of [Amount] during the term of this Agreement and for 12 months thereafter.
+
+Provider shall provide Company with certificates of insurance upon request.
+
+14. AMENDMENTS
+
+This Agreement may only be amended or modified by a written instrument signed by authorized representatives of both parties. No oral modifications shall be effective.
+
+15. NOTICE PROVISIONS
+
+All notices under this Agreement shall be in writing and delivered to the addresses specified above, or to such other address as either party may designate in writing. Notices shall be deemed received: (a) when delivered personally; (b) one business day after sending by overnight courier; (c) three business days after sending by registered mail.
+
+16. SEVERABILITY
+
+If any provision of this Agreement is held to be invalid or unenforceable, the remaining provisions shall continue in full force and effect. The invalid provision shall be modified to the minimum extent necessary to make it valid and enforceable.
+
+17. ENTIRE AGREEMENT
+
+This Agreement, including all exhibits and attachments, constitutes the entire agreement between the parties and supersedes all prior negotiations, representations, and agreements, whether written or oral, relating to the subject matter hereof.
+
+18. ASSIGNMENT
+
+Neither party may assign this Agreement or any rights or obligations hereunder without the prior written consent of the other party, except that either party may assign this Agreement to a successor in connection with a merger, acquisition, or sale of all or substantially all of its assets.
+
+19. WARRANTIES AND REPRESENTATIONS
+
+Provider represents and warrants that: (a) it has the authority to enter into this Agreement; (b) the Services will be performed in a professional and workmanlike manner; (c) the Deliverables will conform to the specifications in the Statement of Work; (d) the Deliverables will not infringe any third-party intellectual property rights.
+
+Company represents and warrants that it has the authority to enter into this Agreement and to perform its obligations hereunder.
+
+20. AUTO-RENEWAL
+
+This Agreement shall automatically renew for successive periods of [Duration] unless either party provides written notice of non-renewal at least 60 days prior to the end of the then-current term.
+
+Upon renewal, the fees may be adjusted by mutual written agreement. If no adjustment is agreed upon, the fees from the prior term shall apply.
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the Effective Date.
+
+[Company Name]
+By: _______________________
+Name: [Authorized Signatory]
+Title: [Title]
+Date: [Date]
+
+[Provider Name]
+By: _______________________
+Name: [Authorized Signatory]
+Title: [Title]
+Date: [Date]

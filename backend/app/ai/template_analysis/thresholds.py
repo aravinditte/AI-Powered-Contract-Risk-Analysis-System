@@ -1,0 +1,5 @@
+SIMILARITY_THRESHOLDS = {
+    "LOW": 0.85,
+    "MEDIUM": 0.70,
+    "HIGH": 0.50,
+}

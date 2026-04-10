@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Risk Analysis System</title>
+    <style>
+        :root {
+            --primary: #1F3A5F;
+            --primary-light: #2d5a8e;
+            --secondary: #6B7280;
+            --bg: #F5F7FA;
+            --card: #FFFFFF;
+            --border: #E5E7EB;
+            --text: #1F2937;
+            --text-secondary: #6B7280;
+            --critical: #DC2626;
+            --critical-bg: #FEE2E2;
+            --high: #EA580C;
+            --high-bg: #FFF7ED;
+            --medium: #D97706;
+            --medium-bg: #FFFBEB;
+            --low: #16A34A;
+            --low-bg: #F0FDF4;
+            --info: #2563EB;
+            --info-bg: #EFF6FF;
+            --success: #16A34A;
+            --danger: #DC2626;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); }
+
+        /* Navigation */
+        .navbar {
+            background: var(--primary);
+            color: white;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            height: 56px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar h1 { font-size: 18px; font-weight: 600; }
+        .navbar nav { margin-left: auto; display: flex; gap: 4px; }
+        .navbar nav button {
+            background: transparent;
+            color: rgba(255,255,255,0.8);
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .navbar nav button:hover, .navbar nav button.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        /* Layout */
+        .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+        /* Cards */
+        .card {
+            background: var(--card);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .card h2 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+        .card h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--card);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            padding: 16px 20px;
+            text-align: center;
+        }
+        .stat-card .value { font-size: 32px; font-weight: 700; color: var(--primary); }
+        .stat-card .label { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-critical { background: var(--critical-bg); color: var(--critical); }
+        .badge-high { background: var(--high-bg); color: var(--high); }
+        .badge-medium { background: var(--medium-bg); color: var(--medium); }
+        .badge-low { background: var(--low-bg); color: var(--low); }
+        .badge-info { background: var(--info-bg); color: var(--info); }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-light); }
+        .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { opacity: 0.9; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { opacity: 0.9; }
+        .btn-secondary { background: var(--border); color: var(--text); }
+        .btn-secondary:hover { background: #D1D5DB; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 16px;
+        }
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(31,58,95,0.03);
+        }
+        .upload-area p { color: var(--text-secondary); margin-top: 8px; font-size: 14px; }
+        .upload-area .icon { font-size: 48px; color: var(--secondary); }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+        th { font-weight: 600; color: var(--text-secondary); font-size: 12px; text-transform: uppercase; }
+        tr:hover { background: rgba(0,0,0,0.02); }
+        .clickable { cursor: pointer; }
+
+        /* Finding Item */
+        .finding {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+        }
+        .finding:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .finding-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+        .finding-header .id { font-family: monospace; font-size: 12px; color: var(--text-secondary); }
+        .finding-header .layer { font-size: 11px; color: var(--info); background: var(--info-bg); padding: 1px 6px; border-radius: 3px; }
+        .finding-body { font-size: 13px; color: var(--text); margin-bottom: 6px; }
+        .finding-clause { font-size: 12px; color: var(--text-secondary); background: #F9FAFB; padding: 8px; border-radius: 4px; margin: 6px 0; font-family: monospace; white-space: pre-wrap; max-height: 80px; overflow-y: auto; }
+        .finding-fix { font-size: 12px; color: var(--success); margin-top: 4px; }
+        .finding-meta { font-size: 11px; color: var(--text-secondary); display: flex; gap: 12px; margin-top: 4px; }
+        .cross-validated { font-size: 11px; color: var(--success); font-weight: 600; }
+
+        /* Form */
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; font-family: inherit;
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+
+        /* Section visibility */
+        .section { display: none; }
+        .section.active { display: block; }
+
+        /* Progress bar */
+        .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+
+        /* Risk Score */
+        .risk-score {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        .risk-score .number { font-size: 48px; font-weight: 700; }
+        .risk-score .details { font-size: 14px; }
+
+        /* Loading */
+        .loading { text-align: center; padding: 40px; color: var(--text-secondary); }
+        .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 24px; right: 24px; padding: 12px 20px; border-radius: 8px;
+            color: white; font-size: 14px; z-index: 200; transform: translateY(100px); opacity: 0;
+            transition: all 0.3s;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast-success { background: var(--success); }
+        .toast-error { background: var(--danger); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .container { padding: 16px; }
+        }
+
+        /* Filters */
+        .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+        .filters select, .filters input { padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Contract Risk Analysis</h1>
+        <nav>
+            <button onclick="showSection('dashboard')" class="active" id="nav-dashboard">Dashboard</button>
+            <button onclick="showSection('upload')" id="nav-upload">Upload</button>
+            <button onclick="showSection('contracts')" id="nav-contracts">Contracts</button>
+            <button onclick="showSection('reviews')" id="nav-reviews">Reviews</button>
+            <button onclick="showSection('templates')" id="nav-templates">Templates</button>
+            <button onclick="showSection('audit')" id="nav-audit">Audit Trail</button>
+        </nav>
+    </div>
+
+    <div class="container">
+        <!-- Dashboard -->
+        <div id="section-dashboard" class="section active">
+            <h2 style="font-size: 20px; margin-bottom: 16px;">Dashboard</h2>
+            <div id="stats-grid" class="stats-grid"></div>
+            <div class="card">
+                <h2>Recent Contracts</h2>
+                <table id="recent-contracts-table">
+                    <thead><tr><th>Filename</th><th>Status</th><th>Risk</th><th>Score</th><th>Date</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Upload -->
+        <div id="section-upload" class="section">
+            <h2 style="font-size: 20px; margin-bottom: 16px;">Upload Contract</h2>
+            <div class="card">
+                <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+                    <div class="icon">&#128196;</div>
+                    <p><strong>Click or drag a file here to upload</strong></p>
+                    <p>Supports: PDF, DOCX, TXT</p>
+                </div>
+                <input type="file" id="file-input" accept=".pdf,.docx,.txt" style="display:none" onchange="handleFileSelect(event)">
+                <div id="upload-status" style="display:none" class="card">
+                    <div id="upload-progress"></div>
+                </div>
+                <div id="upload-result" style="display:none"></div>
+            </div>
+        </div>
+
+        <!-- Contracts List -->
+        <div id="section-contracts" class="section">
+            <h2 style="font-size: 20px; margin-bottom: 16px;">All Contracts</h2>
+            <div class="filters">
+                <select id="contract-filter" onchange="loadContracts()">
+                    <option value="">All Statuses</option>
+                    <option value="uploaded">Uploaded</option>
+                    <option value="analyzed">Analyzed</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+            </div>
+            <div class="card">
+                <table id="contracts-table">
+                    <thead><tr><th>Filename</th><th>Status</th><th>Risk</th><th>Score</th><th>Language</th><th>Date</th><th>Actions</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Contract Detail (dynamically shown) -->
+        <div id="section-contract-detail" class="section">
+            <button class="btn btn-secondary" onclick="showSection('contracts')" style="margin-bottom: 16px;">&larr; Back to Contracts</button>
+            <div id="contract-detail-content"></div>
+        </div>
+
+        <!-- Reviews -->
+        <div id="section-reviews" class="section">
+            <h2 style="font-size: 20px; margin-bottom: 16px;">Pending Reviews</h2>
+            <div id="pending-reviews" class="card">
+                <div class="loading"><div class="spinner"></div><p>Loading...</p></div>
+            </div>
+        </div>
+
+        <!-- Templates -->
+        <div id="section-templates" class="section">
+            <h2 style="font-size: 20px; margin-bottom: 16px;">Template Management</h2>
+            <div class="card">
+                <h3>Create New Template</h3>
+                <div class="form-group">
+                    <label>Template Name</label>
+                    <input type="text" id="template-name" placeholder="e.g., standard_service_agreement">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="template-description" placeholder="Standard service agreement template">
+                </div>
+                <div class="form-group">
+                    <label>Template Content</label>
+                    <textarea id="template-content" rows="10" placeholder="Paste the approved template contract text here..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="createTemplate()">Save Template</button>
+            </div>
+            <div class="card" style="margin-top: 16px;">
+                <h2>Existing Templates</h2>
+                <div id="templates-list"></div>
+            </div>
+        </div>
+
+        <!-- Audit Trail -->
+        <div id="section-audit" class="section">
+            <h2 style="font-size: 20px; margin-bottom: 16px;">Audit Trail</h2>
+            <div class="card">
+                <table id="audit-table">
+                    <thead><tr><th>Action</th><th>Contract</th><th>User</th><th>Details</th><th>Timestamp</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        const API = '/api';
+
+        // --- Navigation ---
+        function showSection(name) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.navbar nav button').forEach(b => b.classList.remove('active'));
+            const section = document.getElementById('section-' + name);
+            const nav = document.getElementById('nav-' + name);
+            if (section) section.classList.add('active');
+            if (nav) nav.classList.add('active');
+
+            if (name === 'dashboard') loadDashboard();
+            if (name === 'contracts') loadContracts();
+            if (name === 'reviews') loadPendingReviews();
+            if (name === 'templates') loadTemplates();
+            if (name === 'audit') loadAuditLog();
+        }
+
+        // --- Toast ---
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast toast-' + type + ' show';
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // --- API Helper ---
+        async function api(path, options = {}) {
+            try {
+                const res = await fetch(API + path, options);
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.detail || `HTTP ${res.status}`);
+                }
+                return await res.json();
+            } catch (e) {
+                showToast(e.message, 'error');
+                throw e;
+            }
+        }
+
+        // --- Dashboard ---
+        async function loadDashboard() {
+            try {
+                const stats = await api('/statistics');
+                document.getElementById('stats-grid').innerHTML = `
+                    <div class="stat-card"><div class="value">${stats.total_contracts}</div><div class="label">Total Contracts</div></div>
+                    <div class="stat-card"><div class="value">${stats.pending_review}</div><div class="label">Pending Review</div></div>
+                    <div class="stat-card"><div class="value">${stats.approved}</div><div class="label">Approved</div></div>
+                    <div class="stat-card"><div class="value">${stats.rejected}</div><div class="label">Rejected</div></div>
+                    <div class="stat-card"><div class="value">${stats.total_findings}</div><div class="label">Total Findings</div></div>
+                    <div class="stat-card"><div class="value">${stats.total_reviews}</div><div class="label">Total Reviews</div></div>
+                `;
+
+                const data = await api('/contracts?limit=10');
+                const tbody = document.querySelector('#recent-contracts-table tbody');
+                tbody.innerHTML = data.contracts.map(c => `
+                    <tr class="clickable" onclick="viewContract('${c.id}')">
+                        <td>${esc(c.original_filename)}</td>
+                        <td><span class="badge badge-${statusColor(c.status)}">${c.status}</span></td>
+                        <td>${c.overall_risk ? `<span class="badge badge-${riskColor(c.overall_risk)}">${c.overall_risk}</span>` : '-'}</td>
+                        <td>${c.overall_score != null ? c.overall_score.toFixed(1) : '-'}</td>
+                        <td>${formatDate(c.upload_date)}</td>
+                    </tr>
+                `).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        // --- Upload ---
+        const uploadArea = document.getElementById('upload-area');
+        uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', e => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length) uploadFile(e.dataTransfer.files[0]);
+        });
+
+        function handleFileSelect(e) {
+            if (e.target.files.length) uploadFile(e.target.files[0]);
+        }
+
+        async function uploadFile(file) {
+            const statusDiv = document.getElementById('upload-status');
+            const resultDiv = document.getElementById('upload-result');
+            statusDiv.style.display = 'block';
+            resultDiv.style.display = 'none';
+            document.getElementById('upload-progress').innerHTML = `
+                <div class="loading"><div class="spinner"></div><p>Analyzing ${esc(file.name)}...</p></div>
+            `;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const result = await fetch(API + '/contracts/upload', { method: 'POST', body: formData }).then(r => {
+                    if (!r.ok) return r.json().then(e => { throw new Error(e.detail); });
+                    return r.json();
+                });
+
+                statusDiv.style.display = 'none';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `
+                    <div class="card">
+                        <h3>Analysis Complete</h3>
+                        <div class="risk-score" style="background: ${riskBg(result.overall_risk)};">
+                            <div class="number" style="color: ${riskHex(result.overall_risk)};">${result.overall_score.toFixed(0)}</div>
+                            <div class="details">
+                                <div><strong>Risk Level: ${result.overall_risk}</strong></div>
+                                <div>${result.total_findings} findings (${result.critical_count} critical, ${result.high_count} high, ${result.medium_count} medium)</div>
+                                <div>Language: ${result.language}</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="viewContract('${result.contract_id}')">View Full Report</button>
+                    </div>
+                `;
+                showToast('Contract analyzed successfully!');
+            } catch (e) {
+                statusDiv.style.display = 'none';
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<div class="card" style="border-color: var(--danger);"><p style="color: var(--danger);">Upload failed: ${esc(e.message)}</p></div>`;
+            }
+        }
+
+        // --- Contracts List ---
+        async function loadContracts() {
+            const filter = document.getElementById('contract-filter').value;
+            const query = filter ? `?status=${filter}` : '';
+            const data = await api('/contracts' + query);
+            const tbody = document.querySelector('#contracts-table tbody');
+            tbody.innerHTML = data.contracts.map(c => `
+                <tr>
+                    <td>${esc(c.original_filename)}</td>
+                    <td><span class="badge badge-${statusColor(c.status)}">${c.status}</span></td>
+                    <td>${c.overall_risk ? `<span class="badge badge-${riskColor(c.overall_risk)}">${c.overall_risk}</span>` : '-'}</td>
+                    <td>${c.overall_score != null ? c.overall_score.toFixed(1) : '-'}</td>
+                    <td>${c.language || '-'}</td>
+                    <td>${formatDate(c.upload_date)}</td>
+                    <td><button class="btn btn-secondary" onclick="viewContract('${c.id}')">View</button></td>
+                </tr>
+            `).join('');
+        }
+
+        // --- Contract Detail ---
+        async function viewContract(id) {
+            showSection('contract-detail');
+            const content = document.getElementById('contract-detail-content');
+            content.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading...</p></div>';
+
+            try {
+                const data = await api('/contracts/' + id);
+                const c = data.contract;
+                const findings = data.findings || [];
+                const reviews = data.reviews || [];
+                const report = data.report || {};
+
+                const severityCounts = { CRITICAL: 0, HIGH: 0, MEDIUM: 0, LOW: 0, INFO: 0 };
+                findings.forEach(f => { if (severityCounts[f.severity] !== undefined) severityCounts[f.severity]++; });
+
+                content.innerHTML = `
+                    <div class="card">
+                        <h2>${esc(c.original_filename)}</h2>
+                        <div class="risk-score" style="background: ${riskBg(c.overall_risk || 'LOW')};">
+                            <div class="number" style="color: ${riskHex(c.overall_risk || 'LOW')};">${c.overall_score != null ? c.overall_score.toFixed(0) : '?'}</div>
+                            <div class="details">
+                                <div><strong>Overall Risk: ${c.overall_risk || 'N/A'}</strong></div>
+                                <div>Status: <span class="badge badge-${statusColor(c.status)}">${c.status}</span></div>
+                                <div>Language: ${c.language} | Analyzed: ${formatDate(c.analysis_date)}</div>
+                                <div>Layers used: ${(report.layers_used || []).join(', ') || 'N/A'}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card" style="border-left: 4px solid var(--critical);"><div class="value">${severityCounts.CRITICAL}</div><div class="label">Critical</div></div>
+                        <div class="stat-card" style="border-left: 4px solid var(--high);"><div class="value">${severityCounts.HIGH}</div><div class="label">High</div></div>
+                        <div class="stat-card" style="border-left: 4px solid var(--medium);"><div class="value">${severityCounts.MEDIUM}</div><div class="label">Medium</div></div>
+                        <div class="stat-card" style="border-left: 4px solid var(--low);"><div class="value">${severityCounts.LOW}</div><div class="label">Low</div></div>
+                        <div class="stat-card" style="border-left: 4px solid var(--info);"><div class="value">${severityCounts.INFO}</div><div class="label">Info</div></div>
+                    </div>
+
+                    ${report.missing_clauses && report.missing_clauses.length ? `
+                        <div class="card" style="border-left: 4px solid var(--critical);">
+                            <h2>Missing Mandatory Clauses</h2>
+                            <ul>${report.missing_clauses.map(mc => `<li style="margin: 4px 0; color: var(--critical); font-weight: 500;">${esc(mc.replace(/_/g, ' '))}</li>`).join('')}</ul>
+                        </div>
+                    ` : ''}
+
+                    <div class="card">
+                        <h2>Findings (${findings.length})</h2>
+                        <div class="filters">
+                            <select onchange="filterFindings(this.value, '${id}')">
+                                <option value="">All Severities</option>
+                                <option value="CRITICAL">Critical</option>
+                                <option value="HIGH">High</option>
+                                <option value="MEDIUM">Medium</option>
+                                <option value="LOW">Low</option>
+                                <option value="INFO">Info</option>
+                            </select>
+                        </div>
+                        <div id="findings-list">
+                            ${findings.map(f => renderFinding(f)).join('')}
+                        </div>
+                    </div>
+
+                    ${c.status === 'analyzed' ? `
+                        <div class="card" style="border-left: 4px solid var(--primary);">
+                            <h2>Submit Review</h2>
+                            <div class="form-group">
+                                <label>Reviewer Name</label>
+                                <input type="text" id="reviewer-name" placeholder="Your name">
+                            </div>
+                            <div class="form-group">
+                                <label>Comments</label>
+                                <textarea id="review-comments" placeholder="Add review comments..."></textarea>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-success" onclick="submitReview('${id}', 'approve')">Approve</button>
+                                <button class="btn btn-danger" onclick="submitReview('${id}', 'reject')">Reject</button>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${reviews.length ? `
+                        <div class="card">
+                            <h2>Review History</h2>
+                            <table>
+                                <thead><tr><th>Reviewer</th><th>Decision</th><th>Comments</th><th>Date</th></tr></thead>
+                                <tbody>
+                                    ${reviews.map(r => `
+                                        <tr>
+                                            <td>${esc(r.reviewer_name)}</td>
+                                            <td><span class="badge badge-${r.decision === 'approve' ? 'low' : 'critical'}">${r.decision}</span></td>
+                                            <td>${esc(r.comments || '')}</td>
+                                            <td>${formatDate(r.review_date)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    ` : ''}
+                `;
+            } catch (e) {
+                content.innerHTML = `<div class="card"><p style="color: var(--danger);">Failed to load contract: ${esc(e.message)}</p></div>`;
+            }
+        }
+
+        function renderFinding(f) {
+            return `
+                <div class="finding" data-severity="${f.severity}">
+                    <div class="finding-header">
+                        <span class="badge badge-${riskColor(f.severity)}">${f.severity}</span>
+                        <span class="id">${esc(f.finding_id)}</span>
+                        <span class="layer">${esc(f.detecting_layer)}</span>
+                        ${f.cross_validated ? '<span class="cross-validated">CROSS-VALIDATED</span>' : ''}
+                    </div>
+                    <div class="finding-body"><strong>${esc(f.clause_type.replace(/_/g, ' '))}</strong>: ${esc(f.explanation)}</div>
+                    ${f.clause_text ? `<div class="finding-clause">${esc(f.clause_text.substring(0, 300))}</div>` : ''}
+                    ${f.suggested_fix ? `<div class="finding-fix">Suggested: ${esc(f.suggested_fix.substring(0, 200))}</div>` : ''}
+                    <div class="finding-meta">
+                        <span>Confidence: ${f.confidence.toFixed(1)}%</span>
+                        ${f.agreeing_layers && f.agreeing_layers.length > 1 ? `<span>Agreed by: ${f.agreeing_layers.join(', ')}</span>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterFindings(severity) {
+            document.querySelectorAll('.finding').forEach(el => {
+                el.style.display = (!severity || el.dataset.severity === severity) ? '' : 'none';
+            });
+        }
+
+        // --- Reviews ---
+        async function submitReview(contractId, decision) {
+            const name = document.getElementById('reviewer-name').value.trim();
+            if (!name) { showToast('Please enter your name', 'error'); return; }
+            const comments = document.getElementById('review-comments').value.trim();
+            await api('/reviews/' + contractId, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ reviewer_name: name, decision, comments })
+            });
+            showToast(`Contract ${decision}d!`);
+            viewContract(contractId);
+        }
+
+        async function loadPendingReviews() {
+            const div = document.getElementById('pending-reviews');
+            try {
+                const data = await api('/reviews');
+                if (!data.pending_reviews.length) {
+                    div.innerHTML = '<p style="color: var(--text-secondary); padding: 20px;">No contracts pending review.</p>';
+                    return;
+                }
+                div.innerHTML = `
+                    <table>
+                        <thead><tr><th>Filename</th><th>Risk</th><th>Score</th><th>Analyzed</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            ${data.pending_reviews.map(c => `
+                                <tr>
+                                    <td>${esc(c.original_filename)}</td>
+                                    <td>${c.overall_risk ? `<span class="badge badge-${riskColor(c.overall_risk)}">${c.overall_risk}</span>` : '-'}</td>
+                                    <td>${c.overall_score != null ? c.overall_score.toFixed(1) : '-'}</td>
+                                    <td>${formatDate(c.analysis_date)}</td>
+                                    <td><button class="btn btn-primary" onclick="viewContract('${c.id}')">Review</button></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (e) { div.innerHTML = `<p style="color: var(--danger);">Error: ${esc(e.message)}</p>`; }
+        }
+
+        // --- Templates ---
+        async function loadTemplates() {
+            const div = document.getElementById('templates-list');
+            try {
+                const data = await api('/templates');
+                if (!data.templates.length) {
+                    div.innerHTML = '<p style="color: var(--text-secondary);">No templates yet.</p>';
+                    return;
+                }
+                div.innerHTML = `
+                    <table>
+                        <thead><tr><th>Name</th><th>Description</th><th>Clauses</th><th>Created</th><th>Actions</th></tr></thead>
+                        <tbody>
+                            ${data.templates.map(t => `
+                                <tr>
+                                    <td>${esc(t.name)}</td>
+                                    <td>${esc(t.description || '')}</td>
+                                    <td>${t.clause_count || 0}</td>
+                                    <td>${formatDate(t.upload_date)}</td>
+                                    <td><button class="btn btn-danger" onclick="deleteTemplate('${t.id}')">Delete</button></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (e) { div.innerHTML = `<p style="color: var(--danger);">Error: ${esc(e.message)}</p>`; }
+        }
+
+        async function createTemplate() {
+            const name = document.getElementById('template-name').value.trim();
+            const desc = document.getElementById('template-description').value.trim();
+            const content = document.getElementById('template-content').value.trim();
+            if (!name || !content) { showToast('Name and content are required', 'error'); return; }
+            await api('/templates', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, description: desc, content })
+            });
+            showToast('Template created!');
+            document.getElementById('template-name').value = '';
+            document.getElementById('template-description').value = '';
+            document.getElementById('template-content').value = '';
+            loadTemplates();
+        }
+
+        async function deleteTemplate(id) {
+            if (!confirm('Delete this template?')) return;
+            await api('/templates/' + id, { method: 'DELETE' });
+            showToast('Template deleted');
+            loadTemplates();
+        }
+
+        // --- Audit ---
+        async function loadAuditLog() {
+            const data = await api('/audit?limit=200');
+            const tbody = document.querySelector('#audit-table tbody');
+            tbody.innerHTML = data.audit_log.map(e => `
+                <tr>
+                    <td><span class="badge badge-info">${esc(e.action)}</span></td>
+                    <td>${e.contract_id ? `<a href="#" onclick="viewContract('${e.contract_id}'); return false;">${e.contract_id.substring(0, 8)}...</a>` : '-'}</td>
+                    <td>${esc(e.user_name || '-')}</td>
+                    <td>${esc(e.details || '-')}</td>
+                    <td>${formatDate(e.timestamp)}</td>
+                </tr>
+            `).join('');
+        }
+
+        // --- Helpers ---
+        function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+        function formatDate(d) { if (!d) return '-'; try { return new Date(d).toLocaleString(); } catch { return d; } }
+        function riskColor(r) { return { CRITICAL: 'critical', HIGH: 'high', MEDIUM: 'medium', LOW: 'low', INFO: 'info' }[r] || 'info'; }
+        function statusColor(s) { return { uploaded: 'info', analyzed: 'medium', approved: 'low', rejected: 'critical', under_review: 'medium', analysis_failed: 'critical' }[s] || 'info'; }
+        function riskBg(r) { return { CRITICAL: 'var(--critical-bg)', HIGH: 'var(--high-bg)', MEDIUM: 'var(--medium-bg)', LOW: 'var(--low-bg)' }[r] || 'var(--info-bg)'; }
+        function riskHex(r) { return { CRITICAL: 'var(--critical)', HIGH: 'var(--high)', MEDIUM: 'var(--medium)', LOW: 'var(--low)' }[r] || 'var(--info)'; }
+
+        // Initial load
+        loadDashboard();
+    </script>
+</body>
+</html>
